@@ -1,6 +1,7 @@
 public class OperatingSystemInfo
 {
     private static OperatingSystemInfo _instance;
+    private static readonly object _lock = new object();
 
     private OperatingSystemInfo()
     {
@@ -13,7 +14,13 @@ public class OperatingSystemInfo
         get
         {
             if (_instance == null)
-                _instance = new OperatingSystemInfo();
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                        _instance = new OperatingSystemInfo();
+                }
+            }
 
             return _instance;
         }
